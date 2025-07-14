@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 // 클래스 차원에 url 매핑 시 RequestMapping을 사용
 @RequestMapping("/hello")
 public class HelloController {
-//    get 요청의 case들
+    //    get 요청의 case들
 //    case 1. 서버가 사용자에게 단순 String 데이터 return - @ResponseBody 있을 때
     @GetMapping("") // 아래 메서드에 대한 서버의 엔드포인트를 설정
 //    ResponseBody가 없고 return 타입이 String인 경우 서버는 templates폴더 밑에 helloworld.html을 찾아서 리턴
@@ -20,7 +20,7 @@ public class HelloController {
         return "helloworld";
     }
 
-//    case 2. 서버가 사용자에게 String(json 형식)의 데이터 return
+    //    case 2. 서버가 사용자에게 String(json 형식)의 데이터 return
     @GetMapping("/json")
     @ResponseBody
     public Hello helloJson() throws JsonProcessingException {
@@ -31,36 +31,37 @@ public class HelloController {
         return h1;
     }
 
-//    case 3. parameter 방식을 통해 사용자로부터 값을 수신
+    //    case 3. parameter 방식을 통해 사용자로부터 값을 수신
 //    parameter의 형식: ~~/member?name=honggildong
     @GetMapping("/param")
     @ResponseBody
-    public Hello param(@RequestParam(value = "name")String inputName){
+    public Hello param(@RequestParam(value = "name") String inputName) {
 //        http://localhost:8080/hello/param?name=hong
-        Hello h1 = new Hello("hong", "hong@naver.com");
+        Hello h1 = new Hello(inputName, inputName + "@naver.com");
         return h1;
     }
 
-//    case 4. pathvariable 방식을 통해 사용자로부터 값을 수신
+    //    case 4. pathvariable 방식을 통해 사용자로부터 값을 수신
 //    pathvariable의 형식:http://localhost:8080/member/1
 //    pathvariable 방식은 url을 통해 자원의 구조를 명확하게 표현할 때 사용(좀 더 restful 함)
     @GetMapping("/path/{inputId}")
     @ResponseBody
-    public String path(@PathVariable Long inputId){
+    public String path(@PathVariable Long inputId) {
 //        별도의 형변환 없이도 매개변수에 타입 지정 시 자동 형변환 시켜줌
 //        long id = Long.parseLong(inputId);
         System.out.println(inputId);
         return "OK";
     }
 
-//    case 5. parameter가 2개 이상일 때
+    //    case 5. parameter가 2개 이상일 때
 //    /hello/param2?name=hong&email=hong@naver.com
     @GetMapping("/param2")
     @ResponseBody
-    public String param2(@RequestParam(value = "name")String inputName, @RequestParam(value = "email")String inputEmail){
+    public String param2(@RequestParam(value = "name") String inputName, @RequestParam(value = "email") String inputEmail) {
         System.out.println(inputName);
         System.out.println(inputEmail);
         return "OK";
+
     }
 
 
