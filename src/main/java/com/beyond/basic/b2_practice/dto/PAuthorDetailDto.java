@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PAuthorDetail {
+public class PAuthorDetailDto {
     private Long id;
     private String name;
     private String email;

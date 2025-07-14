@@ -47,8 +47,8 @@ public class AuthorService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
-        Author author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
-        this.authorMemoryRepository.save(author);
+        Author Author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
+        this.authorMemoryRepository.save(Author);
     }
 
     public List<AuthorListDto> findAll() {
@@ -62,8 +62,8 @@ public class AuthorService {
     public AuthorDetailDto findById(Long id) throws NoSuchElementException {
         // 예외처리를 서비스에서 하기 때문에 Optional객체를 서비스에서 꺼냄
         // 스프링에서 예외는 롤백 기준
-        Author author = authorMemoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-        AuthorDetailDto authorDetailDto = new AuthorDetailDto(author.getId(), author.getName(), author.getEmail());
+        Author Author = authorMemoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        AuthorDetailDto authorDetailDto = new AuthorDetailDto(Author.getId(), Author.getName(), Author.getEmail());
         return authorDetailDto;
     }
 
