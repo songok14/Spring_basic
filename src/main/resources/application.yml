@@ -1,0 +1,16 @@
+#\uD504\uB85C\uC81D\uD2B8 \uC774\uB984 \uC124\uC815 \uC608\uC2DC
+#spring.application.name=basic
+
+#\uC11C\uBC84 \uD3EC\uD2B8 \uAE30\uBCF8\uAC12\uC740 8080\uC785\uB2C8\uB2E4
+#server.port=8080
+
+server:
+  port: 8080
+
+spring:
+#  \uC544\uB798\uB294 jdbc\uC758 \uAE30\uBCF8 db\uAD00\uB828 \uC124\uC815\uC778\uB370, jdbc \uBFD0\uB9CC\uC544\uB2C8\uB77C mybatic, jpa \uB4F1 spring\uC758 \uB300\uB300\uBD84\uC758 db \uAE30\uC220\uC5D0 \uC0AC\uC6A9\uB41C\uB2E4.
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/board
+    username: root
+    password: 1234

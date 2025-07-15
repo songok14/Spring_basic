@@ -24,15 +24,16 @@ repositories {
 }
 
 dependencies {
-//     아래 의존성은 db연결 및 관리를 위한 의존성 : jdbc, mybatis, jpa
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+//    아래 의존성은 db연결 및 관리를 위한 의존성 : jdbc, mybatis, jpa
+//    DB의존성은 바로 DB정보를 찾아 연결을 시도하므로 DB 연결정보 사전 설정 필요, 미설정 시 에러발생
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
-//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-//     spring 웹서비스를 위한 기본 의존성
+//    spring 웹서비스를 위한 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//     getter, setter 등의 자동생성 및 개발의 편의성을 증대시켜주는 의존성
+//    getter, setter 등의 자동생성 및 개발의 편의성을 증대시켜주는 의존성
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
