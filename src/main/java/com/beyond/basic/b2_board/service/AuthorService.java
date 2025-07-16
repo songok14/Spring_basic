@@ -5,7 +5,9 @@ import com.beyond.basic.b2_board.dto.AuthorCreateDto;
 import com.beyond.basic.b2_board.dto.AuthorDetailDto;
 import com.beyond.basic.b2_board.dto.AuthorListDto;
 import com.beyond.basic.b2_board.dto.AuthorUpdatePwDto;
-import com.beyond.basic.b2_board.repository.AuthorJdbcRepository;
+import com.beyond.basic.b2_board.repository.AuthorJpaRepository;
+import com.beyond.basic.b2_board.repository.AuthorMybatisRepository;
+import com.beyond.basic.b2_board.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +40,7 @@ public class AuthorService {
     // 의존성주입 방법 3. RequiredArgsConstructor 어노테이션 사용 -> 반드시 초기화 되어야 하는 필드(final 등)을 대상으로 생성자를 자동 생성
     // 다형성 설계는 불가
 //    private final AuthorMemoryRepository authorMemoryRepository;
-    private final AuthorJdbcRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
     // 객체 조립은 서비스 담당
     public void save(AuthorCreateDto authorCreateDto) {
@@ -49,10 +51,10 @@ public class AuthorService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
-//        Author Author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
+//        Author author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
         // toEntity 패턴을 통해 Author객체 조립을 공통화
-        Author Author = authorCreateDto.authorToEntity();
-        this.authorRepository.save(Author);
+        Author author = authorCreateDto.authorToEntity();
+        this.authorRepository.save(author);
     }
 
     // 트랜잭션이 필요없는 경우 아래와 같이 명시적으로 제외
@@ -81,12 +83,13 @@ public class AuthorService {
     }
 
     public void updatePassword(AuthorUpdatePwDto authorUpdatePwDto) throws NoSuchElementException {
+        // 객체를 수정한 후 별도의 update쿼리를 발생시키지 않아도 영속성 컨텍스트에 의해 객체 변경사항 자동 DB반영
         authorRepository.findByEmail(authorUpdatePwDto.getEmail()).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다.")).updatePw(authorUpdatePwDto.getPassword());
     }
 
     public void delete(Long id) throws NoSuchElementException {
         // id 값으로 요소의 index 값을 찾아 삭제
-        authorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-        authorRepository.delete(id);
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        authorRepository.delete(author);
     }
 }

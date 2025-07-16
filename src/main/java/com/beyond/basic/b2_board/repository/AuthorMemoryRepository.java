@@ -12,8 +12,8 @@ public class AuthorMemoryRepository {
     private List<Author> AuthorList = new ArrayList<>();
     public static Long id = 1L;
 
-    public void save(Author Author){
-        this.AuthorList.add(Author);
+    public void save(Author author){
+        this.AuthorList.add(author);
         id++;
     }
 
