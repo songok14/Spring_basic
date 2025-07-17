@@ -1,7 +1,8 @@
-package com.beyond.basic.b2_board.controller;
+package com.beyond.basic.b2_board.author.controller;
 
-import com.beyond.basic.b2_board.dto.*;
-import com.beyond.basic.b2_board.service.AuthorService;
+import com.beyond.basic.b2_board.author.dto.*;
+import com.beyond.basic.b2_board.author.service.AuthorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,8 @@ public class AuthorController {
 
     // 회원가입
     @PostMapping("/create")
-    public ResponseEntity<?> save(@RequestBody AuthorCreateDto authorCreateDto) {
+    // Dto에 있는 validation 어노테이션과 controller @Valid 한쌍
+    public ResponseEntity<?> save(@Valid @RequestBody AuthorCreateDto authorCreateDto) {
 //        try {
 //            this.authorService.save(authorCreateDto);
 //            return new ResponseEntity<>("OK", HttpStatus.CREATED);
