@@ -33,6 +33,6 @@ public class LogController {
             log.error("에러메시지: ", e);
 //            e.printStackTrace(); // 성능 문제로 logback쓰는게 더 좋음
         }
-        return "OK";
+        return "OK222";
     }
 }
