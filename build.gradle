@@ -40,8 +40,8 @@ dependencies {
 //    spring 웹서비스를 위한 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
 //    getter, setter 등의 자동생성 및 개발의 편의성을 증대시켜주는 의존성
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 //     테스트 코드 작성을 위한 의존성
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
