@@ -1,6 +1,6 @@
 package com.beyond.basic.b2_board.post.controller;
 
-import com.beyond.basic.b2_board.author.dto.CommonDto;
+import com.beyond.basic.b2_board.common.CommonDto;
 import com.beyond.basic.b2_board.post.dto.PostCreateDto;
 import com.beyond.basic.b2_board.post.dto.PostDetailDto;
 import com.beyond.basic.b2_board.post.dto.PostListDto;
