@@ -4,10 +4,12 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+src/main/resources/application-prod.yml
+src/main/java/com/beyond/basic/b2_board/post/domain/test2.java
 
 ### STS ###
 .apt_generated
-.classpath
+.classpatha
 .factorypath
 .project
 .settings

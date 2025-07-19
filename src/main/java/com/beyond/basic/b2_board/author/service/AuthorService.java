@@ -6,6 +6,8 @@ import com.beyond.basic.b2_board.author.dto.AuthorDetailDto;
 import com.beyond.basic.b2_board.author.dto.AuthorListDto;
 import com.beyond.basic.b2_board.author.dto.AuthorUpdatePwDto;
 import com.beyond.basic.b2_board.author.repository.AuthorRepository;
+import com.beyond.basic.b2_board.post.domain.Post;
+import com.beyond.basic.b2_board.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class AuthorService {
     // 다형성 설계는 불가
 //    private final AuthorMemoryRepository authorMemoryRepository;
     private final AuthorRepository authorRepository;
+    private final PostRepository postRepository;
 
     // 객체 조립은 서비스 담당
     public void save(AuthorCreateDto authorCreateDto) {
@@ -71,6 +74,14 @@ public class AuthorService {
         // 예외처리를 서비스에서 하기 때문에 Optional객체를 서비스에서 꺼냄
         // 스프링에서 예외는 롤백 기준
         Author author = authorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        // 연관관계 설정 없이 조회해서 count 값 찾는 경우
+//        List<Post> postListDtos = postRepository.findByAuthorId(id);
+//        AuthorDetailDto authorDetailDto = AuthorDetailDto.fromEntity(author, postListDtos.size());
+
+//        List<Post> postListDtos = postRepository.findByAuthor(author);
+//        AuthorDetailDto authorDetailDto = AuthorDetailDto.fromEntity(author, postListDtos.size());
+
+//        List<Post> postListDtos = postRepository.findByAuthor(author);
         AuthorDetailDto authorDetailDto = AuthorDetailDto.fromEntity(author);
         return authorDetailDto;
     }
