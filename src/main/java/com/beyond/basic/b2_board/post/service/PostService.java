@@ -71,6 +71,7 @@ public class PostService {
 
         // 페이지 처리 findAll 호출
 //        Page<Post> postList = postRepository.findAll(pageable);
+        // 상태코드가 삭제인 것 제외하고 조회
         Page<Post> postList = postRepository.findAllByDelYn(pageable, "N");
 //        return postList.stream().map(a -> PostListDto.fromEntity(a)).collect(Collectors.toList());
         return postList.map(a -> PostListDto.fromEntity(a));

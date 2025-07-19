@@ -20,7 +20,7 @@ public class Post extends BaseTimeEntity {
     private String title;
     @Column(length = 3000)
     private String contents;
-    private String delYn = "n";
+    private String delYn = "N";
 
     // FK 설정 시 ManyToOne과 같은 관계성은 필수
     // ManyToOne에서는 default가 fetch.EAGER(즉시로딩) 설정: author 객체를 사용하지 않아도 author 테이블로 쿼리 발생
