@@ -20,6 +20,7 @@ public class Post extends BaseTimeEntity {
     private String title;
     @Column(length = 3000)
     private String contents;
+    @Builder.Default
     private String delYn = "N";
 
     // FK 설정 시 ManyToOne과 같은 관계성은 필수
