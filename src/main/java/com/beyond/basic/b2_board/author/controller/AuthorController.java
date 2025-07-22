@@ -1,15 +1,19 @@
 package com.beyond.basic.b2_board.author.controller;
 
+import com.beyond.basic.b2_board.author.domain.Author;
 import com.beyond.basic.b2_board.author.dto.*;
 import com.beyond.basic.b2_board.author.service.AuthorService;
 import com.beyond.basic.b2_board.common.CommonDto;
 import com.beyond.basic.b2_board.common.CommonErrorDto;
+import com.beyond.basic.b2_board.common.JwtTokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,6 +22,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/author")
 public class AuthorController {
     private final AuthorService authorService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
     @PostMapping("/create")
@@ -38,6 +43,8 @@ public class AuthorController {
 
     // 회원 목록조회
     @GetMapping("/list")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('SELLER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<AuthorListDto> findAll() {
         return authorService.findAll();
     }
@@ -45,6 +52,8 @@ public class AuthorController {
     // 회원 상세조회: id로 조회
     // 서버에서 별도의 try catch를 하지 않으면, 에러 발생 시 500에러 + 스프링의 포맷으로 에러 리턴
     @GetMapping("/detail/{id}")
+    // ADMIN 권한이 있는지를 authentication 객체에서 쉽게 확인
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(new CommonDto(authorService.findById(id), HttpStatus.CREATED.value(), "ok"), HttpStatus.CREATED);
@@ -70,5 +79,13 @@ public class AuthorController {
     public String delete(@PathVariable Long id) {
         authorService.delete(id);
         return "OK";
+    }
+
+    @PostMapping("/dologin")
+    public ResponseEntity<?> login(@RequestBody AuthorLoginDto authorLoginDto){
+        Author author = authorService.login(authorLoginDto);
+        // 토큰 생성 및 return
+        String token = jwtTokenProvider.createAtToken(author);
+        return new ResponseEntity<>(new CommonDto(token, HttpStatus.OK.value(), "token is created"), HttpStatus.OK);
     }
 }

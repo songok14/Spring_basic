@@ -11,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +32,9 @@ public class PostService {
     }
 
     public void save(PostCreateDto dto){
-        // authorId가 실제 있는지 없는지 검증 필요
-        Author author = authorRepository.findById(dto.getAuthorId()).orElseThrow(() -> new EntityNotFoundException("없는 ID입니다."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email =  authentication.getName();   // claims의 subject : email
+        Author author = authorRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("없는 ID입니다."));
         postRepository.save(dto.toEntity(author));
     }
 

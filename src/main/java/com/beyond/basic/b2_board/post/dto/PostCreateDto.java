@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class PostCreateDto {
     private String title;
     private String contents;
-    private Long authorId;
     private String delYn;
 
     public Post toEntity(Author author){

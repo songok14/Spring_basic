@@ -21,16 +21,14 @@ public class AuthorCreateDto {
     @NotEmpty(message = "비밀번호를 입력해 주세요")
     @Size(min = 8, message = "비밀번호가 너무 짧습니다.")
     private String password;
-    // 문자열로 값이 넘어오면 Role에 값으로 매핑
-    private Role role = Role.USER;
 
-    public Author authorToEntity() {
+    public Author authorToEntity(String encodedPassword) {
         // 빌더 패턴은 매개변수의 갯수와 매개변수의 순서에 상관없이 객체 생성 가능
         return Author.builder()
                 .name(this.name)
-                .password(this.password)
+                .password(encodedPassword)
                 .email(this.email)
-                .role(this.role)
+                .role(Role.USER)
                 .build();
     }
 }
