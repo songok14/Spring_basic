@@ -5,7 +5,11 @@ import com.beyond.basic.b2_board.author.dto.*;
 import com.beyond.basic.b2_board.author.repository.AuthorRepository;
 import com.beyond.basic.b2_board.post.domain.Post;
 import com.beyond.basic.b2_board.post.repository.PostRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +46,8 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final PostRepository postRepository;
     private final PasswordEncoder passwordEncoder;
+    @Value("${jwt.secretKeyAt}")
+    private String secretKey;
 
     // 객체 조립은 서비스 담당
     public void save(AuthorCreateDto authorCreateDto) {
@@ -81,6 +87,13 @@ public class AuthorService {
 //        }
 //        return authorListDtoList;
         return authorRepository.findAll().stream().map(a -> a.listFromEntity()).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public AuthorDetailDto myInfo(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Author author = authorRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        return AuthorDetailDto.fromEntity(author);
     }
 
     @Transactional(readOnly = true)

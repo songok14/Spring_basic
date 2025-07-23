@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +33,23 @@ public class PostService {
         this.authorRepository = authorRepository;
     }
 
-    public void save(PostCreateDto dto){
+    public void save(PostCreateDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email =  authentication.getName();   // claims의 subject : email
+        String email = authentication.getName();   // claims의 subject : email
         Author author = authorRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("없는 ID입니다."));
-        postRepository.save(dto.toEntity(author));
+        LocalDateTime appointmentTime = null;
+        if (dto.getAppointment().equals("Y")) {
+            if (dto.getAppointmentTime() == null || dto.getAppointmentTime().isEmpty()){
+                throw new IllegalArgumentException("시간정보가 비워져있습니다.");
+            }
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            appointmentTime = LocalDateTime.parse(dto.getAppointmentTime(), dateTimeFormatter);
+        }
+
+        postRepository.save(dto.toEntity(author, appointmentTime));
     }
 
-    public PostDetailDto findById(Long id){
+    public PostDetailDto findById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없는 ID입니다."));
         /// 엔티티간의 관계성 설정을 하지 않았을 때
 //        Author author = authorRepository.findById(post.getAuthorId()).orElseThrow(() -> new EntityNotFoundException("없는 회원번호입니다."));
@@ -48,7 +59,7 @@ public class PostService {
         return PostDetailDto.fromEntity(post);
     }
 
-    public Page<PostListDto> findAll(Pageable pageable){
+    public Page<PostListDto> findAll(Pageable pageable) {
         /// testcase: author: 3, post: 3
 //        List<Post> postList = postRepository.findAll();
 //          Hibernate: select p1_0.id,p1_0.author_id,p1_0.contents,p1_0.created_time,p1_0.title,p1_0.updated_time from post p1_0
@@ -75,7 +86,7 @@ public class PostService {
         // 페이지 처리 findAll 호출
 //        Page<Post> postList = postRepository.findAll(pageable);
         // 상태코드가 삭제인 것 제외하고 조회
-        Page<Post> postList = postRepository.findAllByDelYn(pageable, "N");
+        Page<Post> postList = postRepository.findAllByDelYnAndAppointment(pageable, "N", "N");
 //        return postList.stream().map(a -> PostListDto.fromEntity(a)).collect(Collectors.toList());
         return postList.map(a -> PostListDto.fromEntity(a));
     }

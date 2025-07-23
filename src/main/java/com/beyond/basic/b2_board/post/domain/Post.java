@@ -5,6 +5,8 @@ import com.beyond.basic.b2_board.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -22,11 +24,17 @@ public class Post extends BaseTimeEntity {
     private String contents;
     @Builder.Default
     private String delYn = "N";
-
     // FK 설정 시 ManyToOne과 같은 관계성은 필수
     // ManyToOne에서는 default가 fetch.EAGER(즉시로딩) 설정: author 객체를 사용하지 않아도 author 테이블로 쿼리 발생
     // 일반적으로 LAZY(지연로딩) 설정: author 객체를 사용하지 않는 한 author 객체로 쿼리 발생 X
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id") // fk 관계성
     private Author author;
+    @Builder.Default
+    private String appointment = "N";
+    private LocalDateTime appointmentTime;
+
+    public void updateAppointment(String appointment){
+        this.appointment = appointment;
+    }
 }

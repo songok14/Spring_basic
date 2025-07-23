@@ -5,6 +5,7 @@ import com.beyond.basic.b2_board.author.dto.*;
 import com.beyond.basic.b2_board.author.service.AuthorService;
 import com.beyond.basic.b2_board.common.CommonDto;
 import com.beyond.basic.b2_board.common.CommonErrorDto;
+import com.beyond.basic.b2_board.common.JwtTokenFilter;
 import com.beyond.basic.b2_board.common.JwtTokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,13 @@ public class AuthorController {
         return authorService.findAll();
     }
 
+    @GetMapping("/myinfo")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> myInfo() {
+        return new ResponseEntity<>(new CommonDto(authorService.myInfo(), HttpStatus.OK.value(), "마이페이지"), HttpStatus.OK);
+    }
+
+
     // 회원 상세조회: id로 조회
     // 서버에서 별도의 try catch를 하지 않으면, 에러 발생 시 500에러 + 스프링의 포맷으로 에러 리턴
     @GetMapping("/detail/{id}")
@@ -82,7 +90,7 @@ public class AuthorController {
     }
 
     @PostMapping("/dologin")
-    public ResponseEntity<?> login(@RequestBody AuthorLoginDto authorLoginDto){
+    public ResponseEntity<?> login(@RequestBody AuthorLoginDto authorLoginDto) {
         Author author = authorService.login(authorLoginDto);
         // 토큰 생성 및 return
         String token = jwtTokenProvider.createAtToken(author);
