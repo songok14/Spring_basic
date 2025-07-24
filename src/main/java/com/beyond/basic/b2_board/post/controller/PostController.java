@@ -4,6 +4,7 @@ import com.beyond.basic.b2_board.common.CommonDto;
 import com.beyond.basic.b2_board.post.dto.PostCreateDto;
 import com.beyond.basic.b2_board.post.dto.PostDetailDto;
 import com.beyond.basic.b2_board.post.dto.PostListDto;
+import com.beyond.basic.b2_board.post.dto.PostSearchDto;
 import com.beyond.basic.b2_board.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class PostController {
 
     @GetMapping("/list")
     // 페이징처리를 위한 데이터 요청 형식: 8080/post/list?page=0&size=20&sort=title,asc
-    public ResponseEntity<?> postList(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostListDto> postListDtos = postService.findAll(pageable);
+    public ResponseEntity<?> postList(@PageableDefault(size=10, sort="id", direction = Sort.Direction.DESC) Pageable pageable, PostSearchDto dto) {
+        Page<PostListDto> postListDtos = postService.findAll(pageable, dto);
         return new ResponseEntity<>(new CommonDto(postListDtos, HttpStatus.OK.value(), "ok"), HttpStatus.OK);
     }
 

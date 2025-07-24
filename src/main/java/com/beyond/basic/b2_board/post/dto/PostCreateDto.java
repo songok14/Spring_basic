@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 @Builder
 
 public class PostCreateDto {
+    private String category;
     private String title;
     private String contents;
     @Builder.Default
@@ -25,6 +26,7 @@ public class PostCreateDto {
 
     public Post toEntity(Author author, LocalDateTime appointmentTime) {
         return Post.builder()
+                .category(this.category)
                 .title(this.title)
                 .contents(this.contents)
                 .author(author)

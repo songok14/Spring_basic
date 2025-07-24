@@ -33,6 +33,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             String bearerToken = req.getHeader("Authorization");
             if (bearerToken == null) {
                 // token이 없는 경우 다시 filterchanin으로 되돌아가는 로직
+                // 현재 필터(JwtTokenFilter)를 다시 호출하는 것이 아니라 체인에 연결된 다음 필터를 호출하는 역할
                 chain.doFilter(request, response);
                 return;
             }
@@ -40,7 +41,9 @@ public class JwtTokenFilter extends GenericFilterBean {
             // token이 있는 경우 토큰 검증 후 Authentication 객체 생성
             String token = bearerToken.substring(7);
             // token 검증 및 claims 추출
-            Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
 //        claims.getSubject();
 //        claims.get("name");

@@ -38,6 +38,8 @@ public class Author extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Builder.Default // 빌더패턴에서 변수 초기화(디폴트 값) 시 Builder.Default 어노테이션 필수
     private Role role = Role.USER;
+    private String profileImgage;
+
     @OneToOne(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
@@ -63,5 +65,9 @@ public class Author extends BaseTimeEntity {
 
     public AuthorListDto listFromEntity() {
         return new AuthorListDto(this.id, this.name, this.email);
+    }
+
+    public void updateImageUrl(String imgUrl) {
+        this.profileImgage = imgUrl;
     }
 }
