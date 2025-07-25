@@ -70,28 +70,31 @@ public class AuthorService {
 
         authorRepository.save(author);
 
-        // image명 설정
-        String fileName = "user-" + author.getId() + "-profileImage-" + profileImage.getOriginalFilename();
+        if (profileImage != null) {
+            // image명 설정
+            String fileName = "user-" + author.getId() + "-profileImage-" + profileImage.getOriginalFilename();
 
-        // 저장 객체 구성
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(fileName)
-                .contentType(profileImage.getContentType()) // image/jpef, video/mp4
-                .build();
+            // 저장 객체 구성
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .contentType(profileImage.getContentType()) // image/jpef, video/mp4
+                    .build();
 
-        // 이미지를 업로드(byte 형태로)
-        try {
-            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(profileImage.getBytes()));
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            // checked -> unchecked로 바꿔 전체 rollback 되도록 예외처리
-            throw new IllegalArgumentException("이미지 업로드 실패");
+            // 이미지를 업로드(byte 형태로)
+            try {
+                s3Client.putObject(putObjectRequest, RequestBody.fromBytes(profileImage.getBytes()));
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                // checked -> unchecked로 바꿔 전체 rollback 되도록 예외처리
+                throw new IllegalArgumentException("이미지 업로드 실패");
+            }
+
+            // 이미지 url 추출
+            String imgUrl = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+            author.updateImageUrl(imgUrl);
         }
 
-        // 이미지 url 추출
-        String imgUrl = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
-        author.updateImageUrl(imgUrl);
 //        Author author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
         // toEntity 패턴을 통해 Author객체 조립을 공통화
 //        Author dbAuthor = this.authorRepository.save(author);
